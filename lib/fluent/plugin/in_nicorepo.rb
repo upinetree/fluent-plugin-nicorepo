@@ -5,9 +5,12 @@ module Fluent
     Plugin.register_input 'nicorepo', self
 
     config_param :tag, :string
-    config_param :interval, :time, default: 1
+    config_param :interval, :time, default: '10m'
+    config_param :mail, :string
+    config_param :pass, :string
 
     def configure(conf)
+      @nicorepo = Nicorepo.new
       super
     end
 
@@ -29,11 +32,30 @@ module Fluent
     end
 
     def on_timer
-      time = Time.now
-      record = "hoge"
-      Engine.emit(@tag, time, record)
+      reports = fetch_reports
+      reports.each do |report|
+        time = Time.now
+        record = parse_report(report)
+        Engine.emit(@tag, time, record)
+      end
     rescue => e
       log.error "unexpected error", error: e
+    end
+
+    private
+
+    def fetch_reports
+      @nicorepo.login(@mail, @pass)
+      @nicorepo.all(3, since: nil)
+    end
+
+    def parse_report(report)
+      {
+        body:  report.body,
+        title: report.title,
+        url:   report.url,
+        date:  report.date
+      }
     end
   end
 end
