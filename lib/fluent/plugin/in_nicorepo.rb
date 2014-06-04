@@ -5,9 +5,9 @@ module Fluent
     Plugin.register_input 'nicorepo', self
 
     config_param :tag, :string
+    config_param :interval, :time, default: 1
 
     def configure(conf)
-      @interval = 3
       super
     end
 
