@@ -17,20 +17,21 @@ module Fluent
     end
 
     def shutdown
+      Thread.kill(@thread)
       super
     end
 
     def run
       loop do
-        Thread.new(&method(:run))
+        Thread.new(&method(:on_timer))
         sleep @interval
       end
     end
 
-    def run
-      time = Time.now.to_s
+    def on_timer
+      time = Time.now
       record = "hoge"
-      Engine.emit(tag, time, record)
+      Engine.emit(@tag, time, record)
     rescue => e
       log.error "unexpected error", error: e
     end
