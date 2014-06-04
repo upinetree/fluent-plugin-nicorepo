@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Fluentd::Plugin::Nicorepo::VERSION
   spec.authors       = ["upinetree"]
   spec.email         = ["essequake@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{Fluent input plugin for Nicorepo}
+  spec.description   = %q{Fluent input plugin for Nicorepo.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
