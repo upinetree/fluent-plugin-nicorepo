@@ -1,4 +1,4 @@
-module Fluentd
+module Fluent
   module Plugin
     module Nicorepo
       VERSION = "0.0.1"

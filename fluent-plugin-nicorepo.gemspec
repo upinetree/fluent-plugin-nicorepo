@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'fluentd/plugin/nicorepo/version'
+require 'fluent/plugin/nicorepo/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "fluentd-plugin-nicorepo"
-  spec.version       = Fluentd::Plugin::Nicorepo::VERSION
+  spec.name          = "fluent-plugin-nicorepo"
+  spec.version       = Fluent::Plugin::Nicorepo::VERSION
   spec.authors       = ["upinetree"]
   spec.email         = ["essequake@gmail.com"]
   spec.summary       = %q{Fluent input plugin for Nicorepo}

@@ -1,6 +1,6 @@
 require 'nicorepo'
 
-module Fluentd
+module Fluent
   class NicorepoInput < Fluent::Input
     Plugin.register_input 'nicorepo' self
 
