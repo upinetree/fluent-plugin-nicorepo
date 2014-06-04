@@ -2,7 +2,7 @@ require 'nicorepo'
 
 module Fluent
   class NicorepoInput < Fluent::Input
-    Plugin.register_input 'nicorepo' self
+    Plugin.register_input 'nicorepo', self
 
     config_param :tag, :string
 
