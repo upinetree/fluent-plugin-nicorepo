@@ -8,6 +8,8 @@ module Fluent
     config_param :interval, :time, default: '10m'
     config_param :mail, :string
     config_param :pass, :string
+    config_param :limit_num, :integer, default: 30
+    config_param :limit_page, :integer, default: 10
 
     def configure(conf)
       @nicorepo = Nicorepo.new
