@@ -47,8 +47,9 @@ module Fluent
     private
 
     def fetch_reports
+      since = Time.now - @interval
       @nicorepo.login(@mail, @pass)
-      @nicorepo.all(3, since: nil)
+      @nicorepo.all(@limit_num, since: since)
     end
 
     # NOTE: nicorepo側にto_hがほしい
