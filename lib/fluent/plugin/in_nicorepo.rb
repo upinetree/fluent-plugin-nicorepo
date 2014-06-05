@@ -10,6 +10,7 @@ module Fluent
     config_param :pass, :string
     config_param :limit_num, :integer, default: 30
     config_param :limit_page, :integer, default: 10
+    config_param :kind, :string, default: 'all'
 
     def configure(conf)
       @nicorepo = Nicorepo.new
@@ -49,7 +50,18 @@ module Fluent
     def fetch_reports
       since = Time.now - @interval
       @nicorepo.login(@mail, @pass)
-      @nicorepo.all(@limit_num, since: since)
+
+      case @kind
+      when 'all'
+        @nicorepo.all(@limit_num, since: since)
+      when 'videos'
+        @nicorepo.videos(@limit_num, @limit_page, since: since)
+      when 'lives'
+        @nicorepo.lives(@limit_num, @limit_page, since: since)
+      else
+        log.error "unsupported report kind: #{@kind}"
+        []
+      end
     end
 
     # NOTE: nicorepo側にto_hがほしい
