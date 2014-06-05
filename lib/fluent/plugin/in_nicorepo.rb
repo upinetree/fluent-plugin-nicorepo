@@ -35,7 +35,7 @@ module Fluent
       reports = fetch_reports
       reports.each do |report|
         time = Time.now
-        record = parse_report(report)
+        record = report_to_hash(report)
         Engine.emit(@tag, time, record)
       end
     rescue => e
@@ -49,7 +49,8 @@ module Fluent
       @nicorepo.all(3, since: nil)
     end
 
-    def parse_report(report)
+    # NOTE: nicorepo側にto_hがほしい
+    def report_to_hash(report)
       {
         body:  report.body,
         title: report.title,
