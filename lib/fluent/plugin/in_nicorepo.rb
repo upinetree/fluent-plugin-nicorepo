@@ -5,9 +5,9 @@ module Fluent
     Plugin.register_input 'nicorepo', self
 
     config_param :tag, :string
-    config_param :interval, :time, default: 600
     config_param :mail, :string
     config_param :pass, :string
+    config_param :interval, :time, default: 600
     config_param :limit_num, :integer, default: 50
     config_param :limit_page, :integer, default: 30
     config_param :kind, :string, default: 'all'
