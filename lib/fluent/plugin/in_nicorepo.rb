@@ -64,7 +64,6 @@ module Fluent
       end
     end
 
-    # NOTE: nicorepo側にto_hがほしい
     def report_to_hash(report)
       {
         body:  report.body,
