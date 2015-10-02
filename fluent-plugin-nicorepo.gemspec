@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "fluent-plugin-nicorepo"
   spec.version       = Fluent::Plugin::Nicorepo::VERSION
   spec.authors       = ["upinetree"]
-  spec.email         = ["essequake@gmail.com"]
+  spec.email         = ["upinetree@gmail.com"]
   spec.summary       = %q{Fluent input plugin for Nicorepo}
   spec.description   = %q{Fluent input plugin for Nicorepo.}
   spec.homepage      = ""
