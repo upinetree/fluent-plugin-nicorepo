@@ -1,4 +1,5 @@
 require 'helper'
+require 'fluent/plugin/in_nicorepo'
 
 class NicorepoDouble
   def initialize
@@ -18,10 +19,10 @@ class NicorepoDouble
   end
 end
 
-class NicorepoInputTest < MiniTest::Unit::TestCase
+class NicorepoInputTest < Test::Unit::TestCase
   def setup
     Fluent::Test.setup
-    Fluent::NicorepoInput.send(:const_set, :Nicorepo, NicorepoDouble)
+    Fluent::Plugin::NicorepoInput.send(:const_set, :Nicorepo, NicorepoDouble)
   end
 
   CONFIG = %[
@@ -38,7 +39,7 @@ class NicorepoInputTest < MiniTest::Unit::TestCase
   }
 
   def create_driver(conf = CONFIG)
-    Fluent::Test::InputTestDriver.new(Fluent::NicorepoInput).configure(conf)
+    Fluent::Test::Driver::Input.new(Fluent::Plugin::NicorepoInput).configure(conf)
   end
 
   def test_configure
