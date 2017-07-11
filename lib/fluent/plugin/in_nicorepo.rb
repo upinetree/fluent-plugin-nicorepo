@@ -1,8 +1,9 @@
 require 'nicorepo'
+require "fluent/input"
 
 module Fluent
   class NicorepoInput < Fluent::Input
-    Plugin.register_input 'nicorepo', self
+    Plugin.register_input("nicorepo", self)
 
     config_param :tag, :string
     config_param :mail, :string
@@ -39,7 +40,7 @@ module Fluent
       reports.each do |report|
         time = Time.now
         record = report_to_hash(report)
-        Engine.emit(@tag, time, record)
+        router.emit(@tag, time, record)
       end
     rescue => e
       log.error "unexpected error", error: e
@@ -66,12 +67,11 @@ module Fluent
 
     def report_to_hash(report)
       {
-        body:  report.body,
-        title: report.title,
-        url:   report.url,
-        date:  report.date
+        'body'  => report.body,
+        'title' => report.title,
+        'url'   => report.url,
+        'date'  => report.date
       }
     end
   end
 end
-
