@@ -1,9 +1,7 @@
 require 'helper'
+require 'fluent/plugin/in_nicorepo'
 
 class NicorepoDouble
-  def initialize
-  end
-
   def login(*)
     puts 'logined'
   end
@@ -18,7 +16,7 @@ class NicorepoDouble
   end
 end
 
-class NicorepoInputTest < MiniTest::Unit::TestCase
+class NicorepoInputTest < Test::Unit::TestCase
   def setup
     Fluent::Test.setup
     Fluent::NicorepoInput.send(:const_set, :Nicorepo, NicorepoDouble)
@@ -38,7 +36,7 @@ class NicorepoInputTest < MiniTest::Unit::TestCase
   }
 
   def create_driver(conf = CONFIG)
-    Fluent::Test::InputTestDriver.new(Fluent::NicorepoInput).configure(conf)
+    Fluent::Test::InputTestDriver.new(Fluent::NicorepoInput).configure(conf, true)
   end
 
   def test_configure
@@ -54,17 +52,14 @@ class NicorepoInputTest < MiniTest::Unit::TestCase
 
   def test_emit
     expected_record = {
-        body:  "report body",
-        title: "report title",
-        url:   "report url",
-        date:  "report date"
+      'body'  => "report body",
+      'title' => "report title",
+      'url'   => "report url",
+      'date'  => "report date"
     }
 
     d = create_driver
     d.run
-    d.run
-    # TODO: 2回runしないとemitsに反映されない原因を調べる
-    # Fluent::Engine.emitは正しく実行されていることを確認
 
     assert_equal(expected_record, d.emits.first[2])
   end
