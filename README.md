@@ -24,13 +24,14 @@ You can also specify kind of reports by the optional attribute `kind`.
 ```
 <source>
   type nicorepo
-  mail your@email.com   # required: login mail address for nicovideo
-  pass password         # required: login password for nicovide
   interval 3h           # optional: interval to fetch reports from nicovideo (defualt: 10 min)
   kind videos           # optional: kind of reports to be filtered [all, videos, lives] (default: all)
   tag nicorepo.idobata
 </source>
 ```
+
+The login email and password for nicovideo are required to be specified in `~/.netrc`.
+See [nicorepo](https://github.com/upinetree/nicorepo) for the details.
 
 ## Contributing
 
