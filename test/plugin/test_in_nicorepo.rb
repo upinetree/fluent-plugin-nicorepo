@@ -1,30 +1,18 @@
 require 'helper'
 require 'fluent/plugin/in_nicorepo'
 
-class NicorepoDouble
-  def login(*)
-    puts 'logined'
-  end
-
-  def all(*)
-    [OpenStruct.new({
-      body:  "report body",
-      title: "report title",
-      url:   "report url",
-      date:  "report date"
-    })]
-  end
-end
-
 class NicorepoInputTest < Test::Unit::TestCase
-  def setup
-    Fluent::Test.setup
-    Fluent::NicorepoInput.send(:const_set, :Nicorepo, NicorepoDouble)
-  end
+  DUMMY_REPORT = OpenStruct.new(
+    format: [{
+      sender:     "dummy_user",
+      topic:      "動画投稿",
+      title:      "dummy_title",
+      url:        "http://example.com",
+      created_at: Time.now
+    }]
+  )
 
   CONFIG = %[
-    mail dummy@mail.com
-    pass dummy_pass
     tag nicorepo.test
   ]
 
@@ -35,14 +23,17 @@ class NicorepoInputTest < Test::Unit::TestCase
     kind: 'all'
   }
 
+  def setup
+    Fluent::Test.setup
+    Nicorepo::Client.any_instance.stubs(:all).returns(DUMMY_REPORT)
+  end
+
   def create_driver(conf = CONFIG)
     Fluent::Test::InputTestDriver.new(Fluent::NicorepoInput).configure(conf, true)
   end
 
   def test_configure
     d = create_driver
-    assert_equal('dummy@mail.com', d.instance.mail)
-    assert_equal('dummy_pass', d.instance.pass)
     assert_equal('nicorepo.test', d.instance.tag)
     assert_equal(CONFIG_DEFAULTS[:interval], d.instance.interval)
     assert_equal(CONFIG_DEFAULTS[:limit_num], d.instance.limit_num)
@@ -51,12 +42,7 @@ class NicorepoInputTest < Test::Unit::TestCase
   end
 
   def test_emit
-    expected_record = {
-      'body'  => "report body",
-      'title' => "report title",
-      'url'   => "report url",
-      'date'  => "report date"
-    }
+    expected_record = DUMMY_REPORT.format.first
 
     d = create_driver
     d.run

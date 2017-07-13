@@ -7,10 +7,6 @@ module Fluent
 
     desc 'The tag of the event'
     config_param :tag, :string
-    desc 'The login main address for nicovideo'
-    config_param :mail, :string
-    desc 'The login password for nicovideo'
-    config_param :pass, :string
     desc 'The interval of each fetching'
     config_param :interval, :time, default: 600
     desc 'Max logs number at once fetch'
@@ -21,7 +17,7 @@ module Fluent
     config_param :kind, :string, default: 'all'
 
     def configure(conf)
-      @nicorepo = Nicorepo.new
+      @client = Nicorepo::Client.new
       super
     end
 
@@ -43,11 +39,10 @@ module Fluent
     end
 
     def on_timer
-      reports = fetch_reports
-      reports.each do |report|
-        time = Time.now
-        record = report_to_hash(report)
-        router.emit(@tag, time, record)
+      time = Time.now
+
+      fetch_report.format.each do |log|
+        router.emit(@tag, time, log)
       end
     rescue => e
       log.error "unexpected error", error: e
@@ -55,30 +50,20 @@ module Fluent
 
     private
 
-    def fetch_reports
-      since = Time.now - @interval
-      @nicorepo.login(@mail, @pass)
+    def fetch_report
+      last_fetched_at = Time.now - @interval
 
       case @kind
       when 'all'
-        @nicorepo.all(@limit_num, since: since)
+        @client.all(@limit_num, to: last_fetched_at)
       when 'videos'
-        @nicorepo.videos(@limit_num, @limit_page, since: since)
+        @client.videos(@limit_num, limit_page: @limit_page, to: last_fetched_at)
       when 'lives'
-        @nicorepo.lives(@limit_num, @limit_page, since: since)
+        @client.lives(@limit_num, limit_page: @limit_page, to: last_fetched_at)
       else
         log.error "unsupported report kind: #{@kind}"
         []
       end
-    end
-
-    def report_to_hash(report)
-      {
-        'body'  => report.body,
-        'title' => report.title,
-        'url'   => report.url,
-        'date'  => report.date
-      }
     end
   end
 end
